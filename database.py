@@ -9,5 +9,8 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=ENGINE)
 Base = declarative_base()
 
 def init_db():
-    from .models import Analysis
+    try:
+        from .models import Analysis
+    except ImportError:
+        from models import Analysis
     Base.metadata.create_all(bind=ENGINE)

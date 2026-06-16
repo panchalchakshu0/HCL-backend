@@ -1,8 +1,12 @@
 import argparse
 from flask import Flask
 from flask_cors import CORS
-from .routes import bp
-from .database import init_db
+try:
+    from .routes import bp
+    from .database import init_db
+except ImportError:
+    from routes import bp
+    from database import init_db
 
 def create_app():
     app = Flask(__name__)

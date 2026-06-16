@@ -2,9 +2,14 @@ import os
 from flask import Blueprint, request, jsonify, current_app
 from werkzeug.utils import secure_filename
 import pandas as pd
-from .predict import predict_df
-from .database import SessionLocal
-from .models import Analysis
+try:
+    from .predict import predict_df
+    from .database import SessionLocal
+    from .models import Analysis
+except ImportError:
+    from predict import predict_df
+    from database import SessionLocal
+    from models import Analysis
 from datetime import datetime
 
 bp = Blueprint('api', __name__)
@@ -70,7 +75,10 @@ def predict():
                 break
                 
         if has_label:
-            from .train_model import train
+            try:
+                from .train_model import train
+            except ImportError:
+                from train_model import train
             train(df)
     except Exception as e:
         current_app.logger.warning(f"Automatic retraining skipped: {e}")
@@ -129,7 +137,10 @@ def predict():
         }
         
     try:
-        from .predict import generate_groq_summary
+        try:
+            from .predict import generate_groq_summary
+        except ImportError:
+            from predict import generate_groq_summary
         final = generate_groq_summary(aggregates)
         final['model_used'] = "Enterprise Detection System"
     except Exception as e:

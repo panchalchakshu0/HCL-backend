@@ -1,6 +1,9 @@
 from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime
 from sqlalchemy.sql import func
-from .database import Base
+try:
+    from .database import Base
+except ImportError:
+    from database import Base
 
 class Analysis(Base):
     __tablename__ = 'analyses'
